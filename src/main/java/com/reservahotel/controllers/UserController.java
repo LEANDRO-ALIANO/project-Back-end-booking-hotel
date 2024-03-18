@@ -1,5 +1,6 @@
 package com.reservahotel.controllers;
 
+import com.reservahotel.domain.entities.Reserve;
 import com.reservahotel.domain.entities.User;
 import com.reservahotel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping(value="/user")
@@ -25,11 +29,18 @@ UserService service;
     }
 
     @GetMapping(value = "/users")
-    public ResponseEntity<List<User>> getUser(){
+    public ResponseEntity<List<User>> findAll(){
         List<User> users = service.findAll();
         return ResponseEntity.ok().body(users);
 
     }
 
+    @GetMapping(value="/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id){
+        User userById = service.findById(id);
+        return ResponseEntity.ok().body(userById);
+    }
+        }
 
-}
+
+
