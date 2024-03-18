@@ -1,6 +1,7 @@
 package com.reservahotel.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,10 @@ public class User {
     @Column(unique = true)
     private String password;
 
+    @OneToMany(mappedBy = "user")
+
+    List<Reserve>reserves= new ArrayList<>();
+
     public User(String firstName,String lastName, String document, String email,String password){
         this.firstName =firstName;
         this.lastName= lastName;
@@ -37,5 +42,7 @@ public class User {
         this.email=email;
         this.password=password;
     }
+
+
 
 }
