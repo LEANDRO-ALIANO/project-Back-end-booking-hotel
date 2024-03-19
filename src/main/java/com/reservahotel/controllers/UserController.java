@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
@@ -21,7 +22,7 @@ public class UserController {
 UserService service;
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody User obj){
+    public ResponseEntity<User> save(@RequestBody User obj) throws Exception {
         obj = service.saveUser(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
@@ -39,6 +40,13 @@ UserService service;
     public ResponseEntity<User> findById(@PathVariable Long id){
         User userById = service.findById(id);
         return ResponseEntity.ok().body(userById);
+    }
+
+    @DeleteMapping(value="/delete")
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> requestBody) throws Exception {
+        String document = requestBody.get("document");
+        service.deleteUser(document);
+        return ResponseEntity.ok().body("Usuario deletado");
     }
         }
 

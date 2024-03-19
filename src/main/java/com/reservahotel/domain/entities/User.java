@@ -28,7 +28,7 @@ public class User {
     private String document;
     @Column(unique = true)
     private String email;
-    @Column(unique = true)
+
     private String password;
 
     @OneToMany(mappedBy = "user")
