@@ -1,8 +1,10 @@
 package com.reservahotel.service;
 
-import com.reservahotel.domain.entities.Reserve;
-import com.reservahotel.domain.entities.User;
+import com.reservahotel.Dtos.UserDto;
+import com.reservahotel.entities.Reserve;
+import com.reservahotel.entities.User;
 import com.reservahotel.repositories.UserRepository;
+import com.reservahotel.service.Exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,24 +18,13 @@ public class UserService {
     @Autowired
     private ReserveService reserveService;
 
-    public User saveUser(User user) throws Exception {
 
-        Optional<User> document= repository.findByDocument(user.getDocument());
-        if (document.isPresent()) {
-            throw new Exception("CPF JA CADASTRADO");
-        }
-        Optional<User> email= repository.findByEmail(user.getEmail());
-        if (email.isPresent()) {
-            throw new Exception("EMAIL JA CADASTRADO");
-        }
-        return repository.save(user);
-    }
 
     public void deleteUser(String userDocument) throws Exception {
 
         Optional<User> user= repository.findByDocument(userDocument);
         if (user.isEmpty()) {
-            throw new Exception("USUARIO NÃO ENCONTRADO");
+            throw new ResourseNotFoundByDocumentException(userDocument);
         }
        User userIsTrue = user.get();
         List<Reserve> userReserve = user.get().getReserves();
@@ -48,14 +39,54 @@ public class UserService {
         return repository.findAll();
    }
 
-   public User findById(Long id){
+   public User findById(Long id)  {
       Optional<User> user = repository.findById(id);
-        return user.get();
+      return user.orElseThrow(()-> new ResourseNotFoundByIdException(id));
    }
 
    public void deleteReserves(Long id) {
        reserveService.deleteById(id);
    }
+
+    public User saveUser(User user) throws Exception {
+
+        return repository.save(user);
+    }
+   public User createUser(String firstName, String lastName, String document, String email, String password) throws Exception {
+    UserDto dto = new UserDto(firstName,lastName,document,email,password);
+    User user=new User(dto);
+        checkEmail(user.getEmail());
+    checkDocument(user.getDocument());
+    return this.saveUser(user);
+   }
+
+
+   public User findByDocument(String document){
+        Optional<User> user =  repository.findByDocument(document);
+        return user.orElseThrow(()->new ResourseNotFoundByDocumentException(document));
+    }
+
+    public User findByEmail(String email){
+        Optional<User> user =  repository.findByDocument(email);
+        return user.orElseThrow(()->new ResourseNotFoundByEmailException(email));
+    }
+
+    public void checkEmail(String email){
+        User userByEmail = this.findByEmail(email);
+        if(userByEmail != null ){
+            throw new UserWhithEmailAlreadyRegisterException(email);
+        }
+    }
+
+    public void checkDocument(String document){
+        User userByDocument = this.findByDocument(document);
+        if(userByDocument != null ){
+            throw new UserWhithDocumentAlreadyRegisterException(document);
+        }
+
+    }
+
+
    }
 
 

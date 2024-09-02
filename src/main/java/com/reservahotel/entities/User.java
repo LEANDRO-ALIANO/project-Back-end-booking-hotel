@@ -1,14 +1,12 @@
-package com.reservahotel.domain.entities;
+package com.reservahotel.entities;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.reservahotel.Dtos.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +39,13 @@ public class User {
         this.document=document;
         this.email=email;
         this.password=password;
+    }
+    public User(UserDto dto){
+        this.firstName= dto.firstName();
+        this.lastName= dto.lastName();
+        this.document = dto.document();
+        this.email= dto.email();
+        this.password= dto.password();
     }
 
 

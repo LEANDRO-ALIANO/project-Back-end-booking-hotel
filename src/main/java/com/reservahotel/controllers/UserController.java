@@ -1,7 +1,7 @@
 package com.reservahotel.controllers;
 
-import com.reservahotel.domain.entities.Reserve;
-import com.reservahotel.domain.entities.User;
+import com.reservahotel.Dtos.UserDto;
+import com.reservahotel.entities.User;
 import com.reservahotel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping(value="/user")
@@ -21,9 +18,9 @@ public class UserController {
     @Autowired
 UserService service;
 
-    @PostMapping
-    public ResponseEntity<User> save(@RequestBody User obj) throws Exception {
-        obj = service.saveUser(obj);
+    @PostMapping(value= "/save")
+    public ResponseEntity<User> save(@RequestBody String firstName, String lastName, String document, String email, String password) throws Exception {
+        User obj = service.createUser(firstName,lastName,document,email,password);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
 
@@ -37,7 +34,7 @@ UserService service;
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
+    public ResponseEntity<User> findById(@PathVariable Long id)   {
         User userById = service.findById(id);
         return ResponseEntity.ok().body(userById);
     }

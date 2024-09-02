@@ -1,6 +1,6 @@
 package com.reservahotel.repositories;
 
-import com.reservahotel.domain.entities.User;
+import com.reservahotel.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
