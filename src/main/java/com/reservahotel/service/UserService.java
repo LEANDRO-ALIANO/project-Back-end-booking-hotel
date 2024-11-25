@@ -20,20 +20,7 @@ public class UserService {
 
 
 
-    public void deleteUser(String userDocument) throws Exception {
 
-        Optional<User> user= repository.findByDocument(userDocument);
-        if (user.isEmpty()) {
-            throw new ResourseNotFoundByDocumentException(userDocument);
-        }
-       User userIsTrue = user.get();
-        List<Reserve> userReserve = user.get().getReserves();
-        for (Reserve x : userReserve){
-            reserveService.deleteById(x.getId());
-        }
-        repository.delete(userIsTrue);
-        System.out.println("usuario deletado");
-    }
 
     public List<User> findAll(){
         return repository.findAll();
@@ -55,8 +42,6 @@ public class UserService {
    public User createUser(String firstName, String lastName, String document, String email, String password) throws Exception {
     UserDto dto = new UserDto(firstName,lastName,document,email,password);
     User user=new User(dto);
-        checkEmail(user.getEmail());
-    checkDocument(user.getDocument());
     return this.saveUser(user);
    }
 

@@ -19,9 +19,9 @@ public class UserController {
 UserService service;
 
     @PostMapping(value= "/save")
-    public ResponseEntity<User> save(@RequestBody String firstName, String lastName, String document, String email, String password) throws Exception {
-        User obj = service.createUser(firstName,lastName,document,email,password);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+    public ResponseEntity<User> save(@RequestBody UserDto dto) throws Exception {
+        User obj = service.createUser(dto.firstName(),dto.lastName(),dto.document(), dto.email(), dto.password());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getClass()).toUri();
         return ResponseEntity.created(uri).body(obj);
 
     }
